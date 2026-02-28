@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luxom — Homepage v3 (Clean Transitions)</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #0A0A0A;
+    --white: #FAFAFA;
+    --pure-white: #FFFFFF;
+    --gray-60: #999999;
+    --gray-40: #666666;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-smooth: cubic-bezier(0.4, 0, 0, 1);
+    --font-heading: 'Playfair Display', serif;
+    --font-ui: 'Montserrat', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--black);
+    color: var(--white);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ═══════════════════════════════════════
+     NAVBAR
+     ═══════════════════════════════════════ */
+  .navbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 0 48px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    transition: background 0.6s var(--ease-smooth), border-color 0.6s var(--ease-smooth), transform 0.5s var(--ease-smooth);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .navbar.scrolled {
+    background: rgba(0,0,0,0.88);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+  .navbar.on-light {
+    background: rgba(255,255,255,0.88);
+    backdrop-filter: blur(24px);
+    border-bottom-color: rgba(0,0,0,0.05);
+  }
+  .navbar.nav-hidden { transform: translateY(-100%); }
+
+  .navbar-inner {
+    width: 100%;
+    max-width: 1440px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+  }
+  .nav-left, .nav-right { display: flex; align-items: center; gap: 40px; }
+  .nav-right { justify-content: flex-end; }
+  .nav-center {
+    display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 0 40px;
+  }
+  .nav-logo {
+    font-family: var(--font-ui); font-weight: 300; font-size: 17px;
+    letter-spacing: 0.35em; color: #fff; text-decoration: none; transition: color 0.5s ease;
+  }
+  .navbar.on-light .nav-logo { color: #000; }
+  .nav-logo-sub {
+    font-family: var(--font-ui); font-weight: 300; font-size: 6.5px;
+    letter-spacing: 0.5em; color: rgba(255,255,255,0.35); transition: color 0.5s ease;
+  }
+  .navbar.on-light .nav-logo-sub { color: rgba(0,0,0,0.3); }
+  .nav-link {
+    font-family: var(--font-body); font-weight: 500; font-size: 8.5px;
+    letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.45);
+    text-decoration: none; transition: color 0.3s ease; position: relative;
+  }
+  .nav-link::after {
+    content: ''; position: absolute; bottom: -3px; left: 0;
+    width: 0; height: 1px; background: currentColor; transition: width 0.5s var(--ease-out);
+  }
+  .nav-link:hover { color: #fff; }
+  .nav-link:hover::after { width: 100%; }
+  .navbar.on-light .nav-link { color: rgba(0,0,0,0.35); }
+  .navbar.on-light .nav-link:hover { color: #000; }
+  .nav-cta {
+    font-family: var(--font-body); font-weight: 500; font-size: 8.5px;
+    letter-spacing: 0.15em; text-transform: uppercase; color: #fff;
+    text-decoration: none; display: flex; align-items: center; gap: 8px;
+    transition: color 0.3s ease, opacity 0.3s ease;
+  }
+  .nav-cta:hover { opacity: 0.6; }
+  .nav-cta .plus { font-size: 14px; font-weight: 200; }
+  .navbar.on-light .nav-cta { color: #000; }
+
+  /* ═══════════════════════════════════════
+     SECTION 1: HERO
+     ═══════════════════════════════════════ */
+  .hero {
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-media {
+    position: absolute;
+    inset: 0;
+  }
+  .hero-media-inner {
+    width: 100%; height: 115%;
+    position: absolute; top: -7.5%;
+    background:
+      radial-gradient(ellipse at 30% 60%, rgba(40,40,40,0.5) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 30%, rgba(30,30,30,0.3) 0%, transparent 50%),
+      linear-gradient(145deg, #0d0d0d 0%, #1a1a1a 30%, #111 60%, #0a0a0a 100%);
+    will-change: transform;
+  }
+  .hero-media-label {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-family: var(--font-ui); font-size: 10px; letter-spacing: 0.3em;
+    text-transform: uppercase; color: rgba(255,255,255,0.06); z-index: 1;
+    white-space: nowrap; pointer-events: none;
+  }
+  .hero-overlay {
+    position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.1) 60%, rgba(0,0,0,0.5) 100%);
+    pointer-events: none;
+  }
+  .hero-grain {
+    position: absolute; inset: 0; z-index: 2; opacity: 0.03; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat; background-size: 128px;
+  }
+
+  .hero-content {
+    position: relative; z-index: 3; height: 100%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+  }
+  .hero-monogram {
+    font-family: var(--font-ui); font-size: 56px; font-weight: 200;
+    color: rgba(255,255,255,0.1); letter-spacing: 0.05em;
+    opacity: 0; animation: fadeScale 1.4s var(--ease-out) 0.5s forwards;
+  }
+  .hero-mantra {
+    font-family: var(--font-heading); font-size: 74px; font-weight: 400;
+    color: #fff; text-align: center; line-height: 1.2; letter-spacing: 0.01em;
+    opacity: 0; animation: fadeUp 1.2s var(--ease-out) 1.2s forwards;
+  }
+  .hero-mantra span { display: block; }
+  .hero-divider {
+    width: 40px; height: 1px; background: rgba(255,255,255,0.2);
+    opacity: 0; animation: scaleIn 1s var(--ease-out) 1.9s forwards;
+  }
+  .hero-brand {
+    font-family: var(--font-ui); font-size: 7px; font-weight: 400;
+    letter-spacing: 0.5em; color: rgba(255,255,255,0.2); text-transform: uppercase;
+    opacity: 0; animation: fadeUp 0.8s var(--ease-out) 2.1s forwards;
+  }
+  .scroll-cue {
+    position: absolute; bottom: 36px; display: flex; flex-direction: column;
+    align-items: center; gap: 8px; z-index: 3;
+    opacity: 0; animation: fadeUp 0.8s var(--ease-out) 2.8s forwards;
+  }
+  .scroll-cue span {
+    font-family: var(--font-body); font-size: 7px; letter-spacing: 0.4em;
+    color: rgba(255,255,255,0.2); text-transform: uppercase;
+  }
+  .scroll-line {
+    width: 1px; height: 24px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.2), transparent);
+    animation: pulse 2.5s ease-in-out 3s infinite;
+  }
+
+  /* ═══════════════════════════════════════
+     SECTION 2: PHILOSOPHY
+     Same dark bg — no transition needed
+     ═══════════════════════════════════════ */
+  .philosophy {
+    position: relative;
+    background: var(--black);
+    height: 350vh;
+  }
+  .philosophy-inner {
+    position: sticky; top: 0; height: 100vh;
+    display: grid; grid-template-columns: 0.45fr 0.55fr; align-items: center;
+    padding: 0 80px; max-width: 1440px; margin: 0 auto; overflow: hidden; z-index: 1;
+  }
+  .philosophy-left { padding-right: 80px; }
+  .philosophy-label {
+    font-family: var(--font-ui); font-size: 8px; font-weight: 400;
+    letter-spacing: 0.35em; text-transform: uppercase; color: rgba(255,255,255,0.15); margin-bottom: 20px;
+  }
+  .philosophy-title {
+    font-family: var(--font-heading); font-size: 86px; font-weight: 400;
+    line-height: 1.1; color: #fff;
+  }
+  .philosophy-right { position: relative; height: 220px; }
+  .philosophy-statement {
+    position: absolute; top: 0; left: 0; right: 0;
+    font-family: var(--font-body); font-weight: 300; font-size: 20px;
+    line-height: 1.8; color: rgba(255,255,255,0.65);
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 1s var(--ease-smooth), transform 1s var(--ease-smooth);
+  }
+  .philosophy-statement.active { opacity: 1; transform: translateY(0); }
+  .philosophy-statement.exiting { opacity: 0; transform: translateY(-20px); }
+  .philosophy-statement em {
+    font-family: var(--font-heading); font-style: italic; color: rgba(255,255,255,0.9);
+  }
+  .philosophy-counter {
+    position: absolute; bottom: 80px; right: 80px;
+    font-family: var(--font-ui); font-size: 11px; font-weight: 300;
+    letter-spacing: 0.15em; color: rgba(255,255,255,0.2); z-index: 1;
+  }
+  .philosophy-counter .current { color: rgba(255,255,255,0.6); font-weight: 400; }
+
+  /* ═══════════════════════════════════════
+     FULL-BLEED IMAGE BREAK
+     Not a transition — it's its own moment.
+     Sits between sections as a clean break.
+     Short gradient overlays at top/bottom
+     just to soften the hard edges slightly.
+     ═══════════════════════════════════════ */
+  .image-break {
+    position: relative;
+    height: 85vh;
+    overflow: hidden;
+  }
+
+  .image-break-media {
+    position: absolute;
+    inset: -15% 0;
+    will-change: transform;
+  }
+
+  /* Different placeholder tones for each image break */
+  .image-break-media.tone-warm {
+    background:
+      radial-gradient(ellipse at 40% 45%, rgba(80,60,40,0.4) 0%, transparent 50%),
+      radial-gradient(ellipse at 75% 60%, rgba(60,50,40,0.3) 0%, transparent 40%),
+      linear-gradient(160deg, #1a1714 0%, #231e18 30%, #1e1a16 60%, #141210 100%);
+  }
+  .image-break-media.tone-cool {
+    background:
+      radial-gradient(ellipse at 35% 50%, rgba(50,55,65,0.4) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 40%, rgba(45,50,60,0.3) 0%, transparent 40%),
+      linear-gradient(160deg, #12141a 0%, #181c24 30%, #141820 60%, #0e1014 100%);
+  }
+  .image-break-media.tone-neutral {
+    background:
+      radial-gradient(ellipse at 50% 50%, rgba(60,60,60,0.3) 0%, transparent 50%),
+      linear-gradient(170deg, #1a1a1a 0%, #222 35%, #1c1c1c 65%, #111 100%);
+  }
+  .image-break-media.tone-light {
+    background:
+      radial-gradient(ellipse at 50% 50%, rgba(160,155,145,0.3) 0%, transparent 50%),
+      linear-gradient(170deg, #3a3835 0%, #555 30%, #6a6560 60%, #484440 100%);
+  }
+
+  .image-break-label {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-family: var(--font-ui); font-size: 9px; letter-spacing: 0.3em;
+    text-transform: uppercase; color: rgba(255,255,255,0.05); z-index: 2;
+    white-space: nowrap; pointer-events: none;
+  }
+
+  /* Very short, subtle gradient masks — just 80px to soften the hard pixel edge */
+  .image-break::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 80px; z-index: 1; pointer-events: none;
+  }
+  .image-break::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+    height: 80px; z-index: 1; pointer-events: none;
+  }
+
+  /* Dark-to-image: top edge fades from black */
+  .image-break.from-dark::before { background: linear-gradient(to bottom, var(--black), transparent); }
+  /* Image-to-light: bottom edge fades to white */
+  .image-break.to-light::after { background: linear-gradient(to bottom, transparent, var(--pure-white)); }
+  /* Light-to-image: top edge fades from white */
+  .image-break.from-light::before { background: linear-gradient(to bottom, var(--pure-white), transparent); }
+  /* Image-to-dark: bottom edge fades to black */
+  .image-break.to-dark::after { background: linear-gradient(to bottom, transparent, var(--black)); }
+  /* Image-to-dark at footer (pure black) */
+  .image-break.to-footer::after { background: linear-gradient(to bottom, transparent, #000); }
+
+  /* Optional text overlay on image break */
+  .image-break-text {
+    position: absolute; bottom: 20%; left: 50%; transform: translateX(-50%);
+    z-index: 2; text-align: center;
+    opacity: 0;
+    transition: opacity 1s var(--ease-smooth);
+  }
+  .image-break-text.visible { opacity: 1; }
+  .image-break-text span {
+    font-family: var(--font-ui); font-size: 10px; font-weight: 300;
+    letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.35);
+  }
+
+  /* ═══════════════════════════════════════
+     SECTION 3: FAMILY
+     ═══════════════════════════════════════ */
+  .family {
+    background: var(--pure-white);
+    padding: 120px 80px 140px;
+    position: relative;
+  }
+  .family-inner { max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    font-family: var(--font-ui); font-size: 7.5px; font-weight: 400;
+    letter-spacing: 0.35em; text-transform: uppercase;
+    color: rgba(0,0,0,0.2); margin-bottom: 48px;
+  }
+  .family-headline {
+    font-family: var(--font-heading); font-size: 80px; font-weight: 400;
+    color: #000; line-height: 1.15; text-align: center; margin-bottom: 28px;
+    opacity: 0; transform: translateY(30px);
+  }
+  .family-headline.visible {
+    opacity: 1; transform: translateY(0); transition: all 1.2s var(--ease-out);
+  }
+  .family-sub {
+    font-family: var(--font-body); font-weight: 300; font-size: 17px;
+    line-height: 1.85; color: var(--gray-40); text-align: center;
+    max-width: 540px; margin: 0 auto 80px;
+    opacity: 0; transform: translateY(20px);
+  }
+  .family-sub.visible {
+    opacity: 1; transform: translateY(0); transition: all 1.2s var(--ease-out) 0.15s;
+  }
+  .family-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 40px; max-width: 1000px; margin: 0 auto;
+  }
+  .person-card {
+    text-align: center; opacity: 0; transform: translateY(30px);
+  }
+  .person-card.visible {
+    opacity: 1; transform: translateY(0); transition: all 1s var(--ease-out);
+  }
+  .person-card:nth-child(1).visible { transition-delay: 0.05s; }
+  .person-card:nth-child(2).visible { transition-delay: 0.2s; }
+  .person-card:nth-child(3).visible { transition-delay: 0.35s; }
+  .person-photo {
+    width: 100%; aspect-ratio: 3/4; background: #EBEBEB;
+    margin-bottom: 24px; position: relative; overflow: hidden; cursor: pointer;
+  }
+  .person-photo::after {
+    content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0);
+    transition: background 0.6s var(--ease-smooth);
+  }
+  .person-card:hover .person-photo::after { background: rgba(0,0,0,0.06); }
+  .person-photo-inner {
+    width: 100%; height: 100%;
+    background: linear-gradient(145deg, #e8e8e8 0%, #ddd 100%);
+    transition: transform 1.2s var(--ease-smooth);
+  }
+  .person-card:hover .person-photo-inner { transform: scale(1.03); }
+  .person-photo-label {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-family: var(--font-ui); font-size: 8px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: rgba(0,0,0,0.15); z-index: 1;
+  }
+  .person-name {
+    font-family: var(--font-ui); font-size: 11px; font-weight: 500;
+    letter-spacing: 0.2em; text-transform: uppercase; color: #000; margin-bottom: 5px;
+  }
+  .person-role {
+    font-family: var(--font-body); font-weight: 300; font-size: 12px;
+    color: var(--gray-60); letter-spacing: 0.05em;
+  }
+  .family-cta-wrap {
+    text-align: center; margin-top: 64px;
+    opacity: 0; transform: translateY(16px);
+  }
+  .family-cta-wrap.visible {
+    opacity: 1; transform: translateY(0); transition: all 1s var(--ease-out) 0.4s;
+  }
+  .family-cta {
+    font-family: var(--font-body); font-weight: 500; font-size: 11px;
+    letter-spacing: 0.18em; text-transform: uppercase; color: #000;
+    text-decoration: none; position: relative; padding-bottom: 4px;
+  }
+  .family-cta::after {
+    content: ''; position: absolute; bottom: 0; left: 0;
+    width: 100%; height: 1px; background: rgba(0,0,0,0.15);
+    transition: background 0.4s ease;
+  }
+  .family-cta:hover::after { background: rgba(0,0,0,0.7); }
+
+  /* ═══════════════════════════════════════
+     SECTION 4: PROJECTS
+     ═══════════════════════════════════════ */
+  .projects {
+    background: var(--black);
+    padding-top: 120px;
+    position: relative;
+  }
+  .projects-header {
+    padding: 0 80px 60px; max-width: 1440px; margin: 0 auto;
+  }
+  .projects-label {
+    font-family: var(--font-ui); font-size: 8px; font-weight: 400;
+    letter-spacing: 0.35em; text-transform: uppercase;
+    color: rgba(255,255,255,0.15); margin-bottom: 16px;
+  }
+  .projects-headline {
+    font-family: var(--font-heading); font-size: 68px; font-weight: 400;
+    color: #fff; line-height: 1.2;
+  }
+
+  .projects-scroll-container { position: relative; height: 400vh; }
+  .projects-scroll-sticky {
+    position: sticky; top: 0; height: 100vh;
+    overflow: hidden; display: flex; align-items: center;
+  }
+  .projects-track {
+    display: flex; gap: 48px; padding: 0 80px; will-change: transform;
+  }
+
+  .project-card { flex-shrink: 0; width: 68vw; max-width: 980px; cursor: pointer; }
+
+  .project-image {
+    width: 100%; aspect-ratio: 16/10; background: #141414;
+    position: relative; overflow: hidden; margin-bottom: 28px;
+  }
+  .project-image-inner {
+    width: 100%; height: 100%;
+    transition: transform 1.4s var(--ease-smooth);
+  }
+  .project-card:hover .project-image-inner { transform: scale(1.03); }
+  .project-image::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.25) 100%);
+    pointer-events: none;
+  }
+  .project-image-label {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-family: var(--font-ui); font-size: 9px; letter-spacing: 0.25em;
+    text-transform: uppercase; color: rgba(255,255,255,0.06); z-index: 1;
+  }
+
+  .project-meta {
+    display: flex; align-items: baseline; gap: 16px; margin-bottom: 16px;
+  }
+  .project-name {
+    font-family: var(--font-ui); font-size: 12px; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase; color: #fff;
+  }
+  .project-divider-line { flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
+  .project-location {
+    font-family: var(--font-body); font-weight: 300; font-size: 11px; color: var(--gray-60);
+  }
+  .project-desc {
+    font-family: var(--font-heading); font-style: italic; font-size: 19px;
+    color: rgba(255,255,255,0.55); line-height: 1.6; max-width: 480px; margin-bottom: 24px;
+  }
+  .project-link {
+    font-family: var(--font-body); font-weight: 500; font-size: 10px;
+    letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.35);
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    transition: color 0.4s ease, gap 0.4s var(--ease-out);
+  }
+  .project-link:hover { color: rgba(255,255,255,0.8); gap: 14px; }
+  .project-link svg { width: 16px; height: 16px; transition: transform 0.4s var(--ease-out); }
+  .project-link:hover svg { transform: translateX(2px); }
+
+  .projects-progress {
+    position: absolute; bottom: 48px; left: 80px; right: 80px;
+    height: 1px; background: rgba(255,255,255,0.06);
+  }
+  .projects-progress-fill {
+    height: 100%; background: rgba(255,255,255,0.3); width: 0%;
+  }
+
+  /* ═══════════════════════════════════════
+     SECTION 5: SIGNAL STATEMENT
+     ═══════════════════════════════════════ */
+  .signal {
+    background: var(--pure-white);
+    min-height: 70vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 100px 80px;
+  }
+  .signal-quote {
+    font-family: var(--font-heading); font-style: italic; font-size: 54px;
+    font-weight: 400; color: #000; text-align: center; line-height: 1.4;
+    max-width: 780px; opacity: 0; transform: translateY(28px);
+  }
+  .signal-quote.visible {
+    opacity: 1; transform: translateY(0); transition: all 1.4s var(--ease-smooth);
+  }
+
+  /* ═══════════════════════════════════════
+     SECTION 6: LOCATIONS
+     ═══════════════════════════════════════ */
+  .locations {
+    background: var(--pure-white);
+    padding: 0 80px 100px;
+  }
+  .locations-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1px 1fr;
+    padding-top: 48px; border-top: 1px solid rgba(0,0,0,0.06);
+  }
+  .locations-divider { background: rgba(0,0,0,0.06); }
+  .location-block { padding: 56px 64px; }
+  .location-city {
+    font-family: var(--font-heading); font-size: 28px; font-weight: 400;
+    color: #000; margin-bottom: 3px;
+  }
+  .location-region {
+    font-family: var(--font-ui); font-size: 9px; letter-spacing: 0.25em;
+    text-transform: uppercase; color: var(--gray-60); margin-bottom: 24px;
+  }
+  .location-address {
+    font-family: var(--font-body); font-weight: 300; font-size: 14px;
+    color: var(--gray-40); line-height: 1.7;
+  }
+
+  /* ═══════════════════════════════════════
+     SECTION 7: FOOTER
+     ═══════════════════════════════════════ */
+  .footer {
+    background: #000;
+    padding: 80px 80px 40px;
+  }
+  .footer-inner { max-width: 1200px; margin: 0 auto; text-align: center; }
+  .footer-logo {
+    font-family: var(--font-ui); font-weight: 300; font-size: 20px;
+    letter-spacing: 0.4em; color: #fff; margin-bottom: 3px;
+  }
+  .footer-logo-sub {
+    font-family: var(--font-ui); font-weight: 300; font-size: 7px;
+    letter-spacing: 0.5em; color: rgba(255,255,255,0.3); margin-bottom: 48px;
+  }
+  .footer-links {
+    display: flex; justify-content: center; gap: 48px; margin-bottom: 48px;
+  }
+  .footer-link {
+    font-family: var(--font-body); font-weight: 500; font-size: 9px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: rgba(255,255,255,0.3); text-decoration: none; transition: color 0.3s ease;
+  }
+  .footer-link:hover { color: rgba(255,255,255,0.8); }
+  .footer-line { width: 100%; height: 1px; background: rgba(255,255,255,0.05); margin-bottom: 28px; }
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; }
+  .footer-copy {
+    font-family: var(--font-body); font-weight: 300; font-size: 10px;
+    color: rgba(255,255,255,0.15);
+  }
+  .footer-mantra {
+    font-family: var(--font-heading); font-style: italic; font-size: 12px;
+    color: rgba(255,255,255,0.15);
+  }
+
+  /* ═══════════════════════════════════════
+     ANIMATIONS
+     ═══════════════════════════════════════ */
+  @keyframes fadeScale { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes scaleIn { from { opacity: 0; transform: scaleX(0); } to { opacity: 1; transform: scaleX(1); } }
+  @keyframes pulse { 0%, 100% { opacity: 0.15; } 50% { opacity: 0.5; } }
+
+  /* ═══════════════════════════════════════
+     RESPONSIVE
+     ═══════════════════════════════════════ */
+  @media (max-width: 960px) {
+    .navbar { padding: 0 24px; }
+    .nav-left, .nav-right { display: none; }
+    .hero-mantra { font-size: 42px; padding: 0 24px; }
+    .philosophy-inner { grid-template-columns: 1fr; padding: 0 24px; }
+    .philosophy-left { padding: 0 0 32px; }
+    .philosophy-title { font-size: 52px; }
+    .philosophy-statement { font-size: 17px; }
+    .family { padding: 80px 24px 100px; }
+    .family-headline { font-size: 48px; }
+    .family-grid { grid-template-columns: 1fr; max-width: 300px; gap: 48px; }
+    .projects-header { padding: 0 24px 40px; }
+    .projects-headline { font-size: 36px; }
+    .project-card { width: 85vw; }
+    .projects-track { padding: 0 24px; gap: 24px; }
+    .signal { padding: 60px 24px; min-height: 60vh; }
+    .signal-quote { font-size: 26px; }
+    .locations-inner { grid-template-columns: 1fr; }
+    .locations-divider { display: none; }
+    .locations { padding: 0 24px 60px; }
+    .location-block { padding: 40px 0; }
+    .footer { padding: 48px 24px 28px; }
+    .footer-links { flex-wrap: wrap; gap: 20px; }
+    .footer-bottom { flex-direction: column; gap: 8px; }
+    .image-break { height: 50vh; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ NAVBAR ═══════════ -->
+<nav class="navbar" id="navbar">
+  <div class="navbar-inner">
+    <div class="nav-left">
+      <a href="projects.html" class="nav-link">Projects</a>
+      <a href="services.html" class="nav-link">Services</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </div>
+    <div class="nav-center">
+      <a href="index.html" class="nav-logo">L U X O M</a>
+      <span class="nav-logo-sub">D E V E L O P M E N T S</span>
+    </div>
+    <div class="nav-right">
+      <a href="about.html" class="nav-link">About</a>
+      <a href="career.html" class="nav-link">Career</a>
+      <a href="contact.html" class="nav-cta">Let's Talk <span class="plus">+</span></a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════ 1. HERO ═══════════ -->
+<section class="hero" id="hero">
+  <div class="hero-media">
+    <div class="hero-media-inner" id="heroParallax"></div>
+    <span class="hero-media-label">Scroll-Scrubbed Video / Drone Footage</span>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-content">
+    <div class="hero-monogram">X</div>
+    <div class="hero-mantra">
+      <span>Design with Purpose.</span>
+      <span>Live with Meaning.</span>
+    </div>
+    <div class="hero-divider"></div>
+    <div class="hero-brand">Luxom Developments</div>
+  </div>
+  <div class="scroll-cue"><span>Scroll</span><div class="scroll-line"></div></div>
+</section>
+
+<!-- ═══════════ 2. PHILOSOPHY ═══════════ -->
+<section class="philosophy" id="philosophy">
+  <div class="philosophy-inner">
+    <div class="philosophy-left">
+      <div class="philosophy-label">Our Approach</div>
+      <div class="philosophy-title">The<br>Philosophy</div>
+    </div>
+    <div class="philosophy-right">
+      <div class="philosophy-statement active" data-index="0">
+        We don't build houses. We create spaces where <em>identity</em> takes form — where architecture, interiors, and intention converge into something permanent.
+      </div>
+      <div class="philosophy-statement" data-index="1">
+        Every project begins with a question: <em>What does this place need to say?</em> The answer shapes every wall, every threshold, every line of light.
+      </div>
+      <div class="philosophy-statement" data-index="2">
+        Three disciplines. One family. A singular vision. Developer, architect, and interior designer — working as one to craft homes that <em>transcend</em> real estate.
+      </div>
+    </div>
+  </div>
+  <div class="philosophy-counter" id="philCounter">
+    <span class="current">01</span> / 03
+  </div>
+</section>
+
+<!-- ═══════════ 3. FAMILY ═══════════ -->
+<section class="family" id="family">
+  <div class="family-inner">
+    <div class="section-label">Our Story</div>
+    <h2 class="family-headline" id="familyHeadline">Three Minds.<br>One Vision.</h2>
+    <p class="family-sub" id="familySub">
+      Samuel develops. Simón designs the architecture.
+      Margaret shapes the interiors. Together, they don't
+      just build — they compose.
+    </p>
+    <div class="family-grid">
+      <div class="person-card" id="person1">
+        <div class="person-photo"><div class="person-photo-inner"></div><span class="person-photo-label">Photo</span></div>
+        <div class="person-name">Samuel Bissu</div>
+        <div class="person-role">Developer</div>
+      </div>
+      <div class="person-card" id="person2">
+        <div class="person-photo"><div class="person-photo-inner"></div><span class="person-photo-label">Photo</span></div>
+        <div class="person-name">Simón Bissu</div>
+        <div class="person-role">Architect</div>
+      </div>
+      <div class="person-card" id="person3">
+        <div class="person-photo"><div class="person-photo-inner"></div><span class="person-photo-label">Photo</span></div>
+        <div class="person-name">Margaret Bissu</div>
+        <div class="person-role">Interior Designer</div>
+      </div>
+    </div>
+    <div class="family-cta-wrap" id="familyCta">
+      <a href="about.html" class="family-cta">Discover Our Story →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 4. PROJECTS ═══════════ -->
+<section class="projects" id="projects">
+  <div class="projects-header">
+    <div class="projects-label">Selected Works</div>
+    <h2 class="projects-headline">Residences as<br>Cultural Artifacts</h2>
+  </div>
+  <div class="projects-scroll-container" id="projectsContainer">
+    <div class="projects-scroll-sticky">
+      <div class="projects-track" id="projectsTrack">
+        <div class="project-card">
+          <div class="project-image">
+            <div class="project-image-inner" style="background: linear-gradient(145deg, #1e1e1e 0%, #161616 100%);"></div>
+            <span class="project-image-label">Project Render</span>
+          </div>
+          <div class="project-meta">
+            <div class="project-name">Emathla Residential</div>
+            <div class="project-divider-line"></div>
+            <div class="project-location">Coconut Grove, Miami</div>
+          </div>
+          <div class="project-desc">Where the canopy meets the threshold — a home that listens to its landscape.</div>
+          <a href="#" class="project-link">View Project <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
+        <div class="project-card">
+          <div class="project-image">
+            <div class="project-image-inner" style="background: linear-gradient(145deg, #1c1c1c 0%, #141414 100%);"></div>
+            <span class="project-image-label">Project Render</span>
+          </div>
+          <div class="project-meta">
+            <div class="project-name">Broadview Residential</div>
+            <div class="project-divider-line"></div>
+            <div class="project-location">Coconut Grove, Miami</div>
+          </div>
+          <div class="project-desc">Horizon as architecture. Every room calibrated to the bay.</div>
+          <a href="#" class="project-link">View Project <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
+        <div class="project-card">
+          <div class="project-image">
+            <div class="project-image-inner" style="background: linear-gradient(145deg, #1a1a1a 0%, #131313 100%);"></div>
+            <span class="project-image-label">Project Render</span>
+          </div>
+          <div class="project-meta">
+            <div class="project-name">Crystal Residential</div>
+            <div class="project-divider-line"></div>
+            <div class="project-location">Coconut Grove, Miami</div>
+          </div>
+          <div class="project-desc">Transparency as philosophy — structure dissolved into light.</div>
+          <a href="#" class="project-link">View Project <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
+        <div class="project-card">
+          <div class="project-image">
+            <div class="project-image-inner" style="background: linear-gradient(145deg, #1b1b1b 0%, #121212 100%);"></div>
+            <span class="project-image-label">Project Render</span>
+          </div>
+          <div class="project-meta">
+            <div class="project-name">Pinta Residential</div>
+            <div class="project-divider-line"></div>
+            <div class="project-location">Coconut Grove, Miami</div>
+          </div>
+          <div class="project-desc">Intimacy at scale. A private world within the Grove.</div>
+          <a href="#" class="project-link">View Project <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
+      </div>
+      <div class="projects-progress"><div class="projects-progress-fill" id="projectsFill"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 5. SIGNAL STATEMENT ═══════════ -->
+<section class="signal" id="signal">
+  <div class="signal-quote" id="signalQuote">
+    "We don't compete with developers.<br>
+    We collaborate with legacy."
+  </div>
+</section>
+
+<!-- ═══════════ 6. LOCATIONS ═══════════ -->
+<section class="locations" id="locations">
+  <div class="locations-inner">
+    <div class="location-block">
+      <div class="location-city">Coconut Grove</div>
+      <div class="location-region">MIAMI OFFICE</div>
+      <div class="location-address">
+        2665 S. Bayshore Drive,<br>
+        M-103-7, 33133,<br>
+        Miami, FL.<br><br>
+        +1 (305) 848-2636
+      </div>
+    </div>
+    <div class="locations-divider"></div>
+    <div class="location-block">
+      <div class="location-city">Mexico City</div>
+      <div class="location-region">MEXICO CITY OFFICE</div>
+      <div class="location-address">
+        Prado Norte 365,<br>
+        Int 2 y 5, Lomas de Chapultepec.<br>
+        Mexico City.<br><br>
+        +52 55 5540 4597<br>
+        +52 55 5035 7970
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 7. FOOTER ═══════════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">L U X O M</div>
+    <div class="footer-logo-sub">D E V E L O P M E N T S</div>
+    <div class="footer-links">
+      <a href="about.html" class="footer-link">About</a>
+      <a href="projects.html" class="footer-link">Projects</a>
+      <a href="services.html" class="footer-link">Services</a>
+      <a href="career.html" class="footer-link">Career</a>
+      <a href="contact.html" class="footer-link">Contact</a>
+      <a href="#" class="footer-link">Instagram</a>
+    </div>
+    <div class="footer-line"></div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 Luxom Developments. All rights reserved.</div>
+      <div class="footer-mantra">Design with Purpose. Live with Meaning.</div>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════ JAVASCRIPT ═══════════ -->
+<script>
+  const navbar = document.getElementById('navbar');
+  let lastScrollY = 0;
+
+  function parallax(el, speed) {
+    if (!el) return;
+    const p = el.closest('.image-break') || el.parentElement;
+    const rect = p.getBoundingClientRect();
+    const center = rect.top + rect.height / 2;
+    const offset = (center - window.innerHeight / 2) * speed;
+    el.style.transform = `translateY(${offset}px)`;
+  }
+
+  function updateNavbar() {
+    const scrollY = window.scrollY;
+    const vh = window.innerHeight;
+    const delta = scrollY - lastScrollY;
+
+    if (Math.abs(delta) > 5) {
+      if (scrollY < vh * 0.5) {
+        navbar.classList.remove('nav-hidden');
+      } else if (delta > 0) {
+        navbar.classList.add('nav-hidden');
+      } else {
+        navbar.classList.remove('nav-hidden');
+      }
+    }
+    lastScrollY = scrollY;
+
+    const lightEls = document.querySelectorAll('.family, .signal, .locations');
+    let onLight = false;
+    lightEls.forEach(s => {
+      const r = s.getBoundingClientRect();
+      if (r.top < 72 && r.bottom > 72) onLight = true;
+    });
+
+    navbar.classList.toggle('scrolled', scrollY > vh * 0.25 && !onLight);
+    navbar.classList.toggle('on-light', onLight && scrollY > vh * 0.25);
+    if (scrollY <= vh * 0.25) navbar.classList.remove('scrolled', 'on-light');
+  }
+
+  function updatePhilosophy() {
+    const sec = document.getElementById('philosophy');
+    const rect = sec.getBoundingClientRect();
+    const progress = Math.max(0, Math.min(1, -rect.top / (sec.offsetHeight - window.innerHeight)));
+    const idx = Math.min(2, Math.floor(progress * 3));
+
+    sec.querySelectorAll('.philosophy-statement').forEach((s, i) => {
+      s.classList.remove('active', 'exiting');
+      if (i === idx) s.classList.add('active');
+      else if (i < idx) s.classList.add('exiting');
+    });
+
+    document.getElementById('philCounter').innerHTML =
+      `<span class="current">0${idx + 1}</span> / 03`;
+  }
+
+  function updateProjects() {
+    const c = document.getElementById('projectsContainer');
+    const t = document.getElementById('projectsTrack');
+    const f = document.getElementById('projectsFill');
+    if (!c || !t) return;
+    const rect = c.getBoundingClientRect();
+    const progress = Math.max(0, Math.min(1, -rect.top / (c.offsetHeight - window.innerHeight)));
+    const maxX = t.scrollWidth - window.innerWidth + 160;
+    t.style.transform = `translateX(${-progress * maxX}px)`;
+    if (f) f.style.width = `${progress * 100}%`;
+  }
+
+  function reveal(el, offset = 0.82) {
+    if (!el || el.classList.contains('visible')) return;
+    if (el.getBoundingClientRect().top < window.innerHeight * offset) el.classList.add('visible');
+  }
+
+  function onScroll() {
+    updateNavbar();
+    updatePhilosophy();
+    updateProjects();
+
+    parallax(document.getElementById('heroParallax'), -0.1);
+
+    reveal(document.getElementById('familyHeadline'));
+    reveal(document.getElementById('familySub'));
+    reveal(document.getElementById('person1'), 0.78);
+    reveal(document.getElementById('person2'), 0.78);
+    reveal(document.getElementById('person3'), 0.78);
+    reveal(document.getElementById('familyCta'), 0.85);
+    reveal(document.getElementById('signalQuote'), 0.75);
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  onScroll();
+</script>
+
+</body>
+</html>

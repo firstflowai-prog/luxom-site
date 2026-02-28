@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects — Luxom Developments</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --black: #0A0A0A;
+    --white: #FAFAFA;
+    --pure-white: #FFFFFF;
+    --gray-60: #999;
+    --gray-40: #666;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-smooth: cubic-bezier(0.4, 0, 0, 1);
+    --font-heading: 'Playfair Display', serif;
+    --font-ui: 'Montserrat', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--font-body); background: var(--pure-white); color: var(--black); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+
+  /* ═══════════ NAVBAR ═══════════ */
+  .navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    padding: 0 48px; height: 72px; display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.88); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    transition: background 0.6s var(--ease-smooth), border-color 0.6s var(--ease-smooth), transform 0.5s var(--ease-smooth);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+  .navbar.nav-hidden { transform: translateY(-100%); }
+  .navbar-inner { width: 100%; max-width: 1440px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; }
+  .nav-left, .nav-right { display: flex; align-items: center; gap: 40px; }
+  .nav-right { justify-content: flex-end; }
+  .nav-center { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 0 40px; }
+  .nav-logo { font-family: var(--font-ui); font-weight: 300; font-size: 17px; letter-spacing: 0.35em; color: #000; text-decoration: none; }
+  .nav-logo-sub { font-family: var(--font-ui); font-weight: 300; font-size: 6.5px; letter-spacing: 0.5em; color: rgba(0,0,0,0.3); }
+  .nav-link {
+    font-family: var(--font-body); font-weight: 500; font-size: 8.5px;
+    letter-spacing: 0.22em; text-transform: uppercase; color: rgba(0,0,0,0.35);
+    text-decoration: none; transition: color 0.3s; position: relative;
+  }
+  .nav-link::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 1px; background: currentColor; transition: width 0.5s var(--ease-out); }
+  .nav-link:hover { color: #000; }
+  .nav-link:hover::after { width: 100%; }
+  .nav-link.active { color: rgba(0,0,0,0.75); }
+  .nav-link.active::after { width: 100%; }
+  .nav-cta {
+    font-family: var(--font-body); font-weight: 500; font-size: 8.5px;
+    letter-spacing: 0.15em; text-transform: uppercase; color: #000;
+    text-decoration: none; display: flex; align-items: center; gap: 8px; transition: opacity 0.3s;
+  }
+  .nav-cta:hover { opacity: 0.6; }
+  .nav-cta .plus { font-size: 14px; font-weight: 200; }
+
+  /* ═══════════ HEADER ═══════════ */
+  .page-header {
+    padding: 120px 48px 48px; max-width: 1440px; margin: 0 auto;
+  }
+  .page-title {
+    font-family: var(--font-heading); font-size: clamp(42px, 5vw, 64px);
+    font-weight: 400; color: #000; line-height: 1.1;
+    opacity: 0; animation: fadeUp 1s var(--ease-out) 0.3s forwards;
+  }
+
+  /* ═══════════ FILTER ═══════════ */
+  .filter {
+    padding: 0 48px 40px; max-width: 1440px; margin: 0 auto;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    display: flex; align-items: center; gap: 32px;
+    opacity: 0; animation: fadeUp 0.8s var(--ease-out) 0.6s forwards;
+  }
+  .filter-tab {
+    font-family: var(--font-body); font-weight: 500; font-size: 9px;
+    letter-spacing: 0.18em; text-transform: uppercase; color: rgba(0,0,0,0.2);
+    cursor: pointer; background: none; border: none; padding: 0 0 8px;
+    position: relative; transition: color 0.3s;
+  }
+  .filter-tab::after {
+    content: ''; position: absolute; bottom: -1px; left: 0;
+    width: 0; height: 1px; background: #000; transition: width 0.5s var(--ease-out);
+  }
+  .filter-tab:hover { color: rgba(0,0,0,0.5); }
+  .filter-tab.active { color: #000; }
+  .filter-tab.active::after { width: 100%; }
+
+  /* ═══════════ MASONRY GRID ═══════════ */
+  .masonry {
+    padding: 40px 48px 120px; max-width: 1440px; margin: 0 auto;
+    columns: 4; column-gap: 10px;
+  }
+
+  .tile {
+    break-inside: avoid; margin-bottom: 10px;
+    position: relative; overflow: hidden; cursor: pointer;
+    opacity: 0; transform: translateY(30px);
+  }
+  .tile.visible {
+    opacity: 1; transform: translateY(0);
+    transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+  }
+
+  .tile-image {
+    width: 100%; display: block; position: relative; overflow: hidden;
+  }
+  .tile-image-inner {
+    width: 100%; height: 100%; position: absolute; inset: -8px;
+    transition: transform 1.2s var(--ease-smooth);
+  }
+  .tile:hover .tile-image-inner { transform: scale(1.04); }
+
+  /* Aspect ratio placeholders */
+  .tile-image-ratio { width: 100%; background: #EBEBEB; }
+  .tile--tall .tile-image-ratio { aspect-ratio: 3/4; }
+  .tile--wide .tile-image-ratio { aspect-ratio: 4/3; }
+  .tile--square .tile-image-ratio { aspect-ratio: 1/1; }
+  .tile--xtall .tile-image-ratio { aspect-ratio: 2/3; }
+  .tile--short .tile-image-ratio { aspect-ratio: 16/9; }
+
+  .tile-image-label {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-family: var(--font-ui); font-size: 7px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: rgba(0,0,0,0.08); z-index: 2; pointer-events: none;
+  }
+
+  /* Hover overlay */
+  .tile-overlay {
+    position: absolute; inset: 0; z-index: 3;
+    background: rgba(0,0,0,0); display: flex; flex-direction: column;
+    justify-content: flex-end; padding: 24px;
+    transition: background 0.5s var(--ease-smooth);
+  }
+  .tile:hover .tile-overlay { background: rgba(0,0,0,0.35); }
+
+  .tile-name {
+    font-family: var(--font-ui); font-size: 11px; font-weight: 400;
+    letter-spacing: 0.25em; text-transform: uppercase; color: #fff;
+    opacity: 0; transform: translateY(12px);
+    transition: opacity 0.4s var(--ease-out) 0.05s, transform 0.4s var(--ease-out) 0.05s;
+  }
+  .tile:hover .tile-name { opacity: 1; transform: translateY(0); }
+
+  .tile-location {
+    font-family: var(--font-body); font-weight: 300; font-size: 11px;
+    color: rgba(255,255,255,0.5); margin-top: 4px;
+    opacity: 0; transform: translateY(8px);
+    transition: opacity 0.4s var(--ease-out) 0.1s, transform 0.4s var(--ease-out) 0.1s;
+  }
+  .tile:hover .tile-location { opacity: 1; transform: translateY(0); }
+
+  .tile-arrow {
+    position: absolute; top: 20px; right: 20px; z-index: 4;
+    width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+    opacity: 0; transform: translate(-8px, 8px);
+    transition: opacity 0.3s var(--ease-out) 0.12s, transform 0.3s var(--ease-out) 0.12s;
+  }
+  .tile:hover .tile-arrow { opacity: 1; transform: translate(0); }
+  .tile-arrow svg { width: 16px; height: 16px; }
+
+  /* ═══════════ CTA ═══════════ */
+  .cta {
+    background: var(--black); padding: 160px 80px; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center; text-align: center;
+  }
+  .cta-content { position: relative; z-index: 1; max-width: 560px; }
+  .cta-label {
+    font-family: var(--font-ui); font-size: 7.5px; font-weight: 400;
+    letter-spacing: 0.35em; text-transform: uppercase; color: rgba(255,255,255,0.15);
+    margin-bottom: 28px;
+    opacity: 0; transform: translateY(16px);
+  }
+  .cta-label.visible { opacity: 1; transform: translateY(0); transition: all 0.8s var(--ease-out); }
+  .cta-heading {
+    font-family: var(--font-heading); font-size: clamp(36px, 4.5vw, 56px);
+    font-weight: 400; color: #fff; line-height: 1.2; margin-bottom: 20px;
+    opacity: 0; transform: translateY(28px);
+  }
+  .cta-heading.visible { opacity: 1; transform: translateY(0); transition: all 1.2s var(--ease-out) 0.1s; }
+  .cta-sub {
+    font-family: var(--font-body); font-weight: 300; font-size: 15px;
+    color: rgba(255,255,255,0.35); line-height: 1.75; margin-bottom: 40px;
+    opacity: 0; transform: translateY(16px);
+  }
+  .cta-sub.visible { opacity: 1; transform: translateY(0); transition: all 1s var(--ease-out) 0.2s; }
+  .cta-btn {
+    display: inline-block;
+    font-family: var(--font-body); font-weight: 500; font-size: 9px;
+    letter-spacing: 0.22em; text-transform: uppercase; color: #fff;
+    text-decoration: none; padding: 16px 44px;
+    border: 1px solid rgba(255,255,255,0.12);
+    transition: border-color 0.4s, letter-spacing 0.4s var(--ease-out), background 0.4s;
+    opacity: 0; transform: translateY(12px);
+  }
+  .cta-btn.visible { opacity: 1; transform: translateY(0); transition: all 0.8s var(--ease-out) 0.35s; }
+  .cta-btn:hover { border-color: rgba(255,255,255,0.4); letter-spacing: 0.3em; background: rgba(255,255,255,0.04); }
+
+  /* ═══════════ FOOTER ═══════════ */
+  .footer { background: #000; padding: 80px 80px 40px; }
+  .footer-inner { max-width: 1200px; margin: 0 auto; text-align: center; }
+  .footer-logo { font-family: var(--font-ui); font-weight: 300; font-size: 20px; letter-spacing: 0.4em; color: #fff; margin-bottom: 3px; }
+  .footer-logo-sub { font-family: var(--font-ui); font-weight: 300; font-size: 7px; letter-spacing: 0.5em; color: rgba(255,255,255,0.3); margin-bottom: 48px; }
+  .footer-links { display: flex; justify-content: center; gap: 48px; margin-bottom: 48px; }
+  .footer-link { font-family: var(--font-body); font-weight: 500; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.3); text-decoration: none; transition: color 0.3s; }
+  .footer-link:hover { color: rgba(255,255,255,0.8); }
+  .footer-line { width: 100%; height: 1px; background: rgba(255,255,255,0.05); margin-bottom: 28px; }
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; }
+  .footer-copy { font-family: var(--font-body); font-weight: 300; font-size: 10px; color: rgba(255,255,255,0.15); }
+  .footer-mantra { font-family: var(--font-heading); font-style: italic; font-size: 12px; color: rgba(255,255,255,0.15); }
+
+  /* ═══════════ ANIMATIONS ═══════════ */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ═══════════ RESPONSIVE ═══════════ */
+  @media (max-width: 1100px) {
+    .masonry { columns: 3; }
+  }
+  @media (max-width: 768px) {
+    .navbar { padding: 0 24px; }
+    .nav-left, .nav-right { display: none; }
+    .page-header { padding: 100px 24px 36px; flex-direction: column; align-items: flex-start; gap: 16px; }
+    .page-meta { text-align: left; }
+    .filter { padding: 0 24px 28px; gap: 20px; flex-wrap: wrap; }
+    .masonry { columns: 2; padding: 28px 24px 80px; column-gap: 8px; }
+    .tile { margin-bottom: 8px; }
+    .cta { padding: 100px 24px; }
+    .footer { padding: 48px 24px 28px; }
+    .footer-links { flex-wrap: wrap; gap: 20px; }
+    .footer-bottom { flex-direction: column; gap: 8px; }
+  }
+  @media (max-width: 480px) {
+    .masonry { columns: 1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ NAVBAR ═══════════ -->
+<nav class="navbar" id="navbar">
+  <div class="navbar-inner">
+    <div class="nav-left">
+      <a href="projects.html" class="nav-link active">Projects</a>
+      <a href="services.html" class="nav-link">Services</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </div>
+    <div class="nav-center">
+      <a href="index.html" class="nav-logo">L U X O M</a>
+      <span class="nav-logo-sub">D E V E L O P M E N T S</span>
+    </div>
+    <div class="nav-right">
+      <a href="about.html" class="nav-link">About</a>
+      <a href="career.html" class="nav-link">Career</a>
+      <a href="contact.html" class="nav-cta">Let\'s Talk <span class="plus">+</span></a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<div class="page-header">
+  <h1 class="page-title">Projects</h1>
+</div>
+
+<!-- ═══════════ FILTER ═══════════ -->
+<div class="filter">
+  <button class="filter-tab active">All</button>
+  <button class="filter-tab">Residential</button>
+  <button class="filter-tab">Commercial</button>
+  <button class="filter-tab">In Development</button>
+  <button class="filter-tab">Completed</button>
+</div>
+
+<!-- ═══════════ MASONRY GRID ═══════════ -->
+<div class="masonry" id="masonry">
+
+  <!-- Emathla -->
+  <a href="#" class="tile tile--tall">
+    <div class="tile-image">
+      <div class="tile-image-ratio" style="background:linear-gradient(160deg,#e0ddd8,#ccc8c2)"></div>
+      <span class="tile-image-label">Exterior Render</span>
+    </div>
+    <div class="tile-overlay">
+      <div class="tile-name">Emathla</div>
+      <div class="tile-location">Coconut Grove, Miami</div>
+    </div>
+    <div class="tile-arrow"><svg viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="1.2"><path d="M3 13L13 3M13 3H5M13 3v8"/></svg></div>
+  </a>
+
+  <!-- Broadview -->
+  <a href="#" class="tile tile--wide">
+    <div class="tile-image">
+      <div class="tile-image-ratio" style="background:linear-gradient(145deg,#d8d5d0,#c5c0ba)"></div>
+      <span class="tile-image-label">Project Render</span>
+    </div>
+    <div class="tile-overlay">
+      <div class="tile-name">Broadview</div>
+      <div class="tile-location">Coconut Grove, Miami</div>
+    </div>
+    <div class="tile-arrow"><svg viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="1.2"><path d="M3 13L13 3M13 3H5M13 3v8"/></svg></div>
+  </a>
+
+  <!-- Crystal -->
+  <a href="#" class="tile tile--xtall">
+    <div class="tile-image">
+      <div class="tile-image-ratio" style="background:linear-gradient(155deg,#dddad5,#c8c4be)"></div>
+      <span class="tile-image-label">Project Render</span>
+    </div>
+    <div class="tile-overlay">
+      <div class="tile-name">Crystal</div>
+      <div class="tile-location">Coconut Grove, Miami</div>
+    </div>
+    <div class="tile-arrow"><svg viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="1.2"><path d="M3 13L13 3M13 3H5M13 3v8"/></svg></div>
+  </a>
+
+  <!-- Pinta -->
+  <a href="#" class="tile tile--square">
+    <div class="tile-image">
+      <div class="tile-image-ratio" style="background:linear-gradient(165deg,#d5d2cd,#c2beb8)"></div>
+      <span class="tile-image-label">Project Render</span>
+    </div>
+    <div class="tile-overlay">
+      <div class="tile-name">Pinta</div>
+      <div class="tile-location">Coconut Grove, Miami</div>
+    </div>
+    <div class="tile-arrow"><svg viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="1.2"><path d="M3 13L13 3M13 3H5M13 3v8"/></svg></div>
+  </a>
+
+  <!-- Project 5 -->
+  <a href="#" class="tile tile--tall">
+    <div class="tile-image">
+      <div class="tile-image-ratio" style="background:linear-gradient(150deg,#e2dfda,#cdc9c3)"></div>
+      <span class="tile-image-label">Project Render</span>
+    </div>
+    <div class="tile-overlay">
+      <div class="tile-name">Project —</div>
+      <div class="tile-location">Miami, FL</div>
+    </div>
+    <div class="tile-arrow"><svg viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="1.2"><path d="M3 13L13 3M13 3H5M13 3v8"/></svg></div>
+  </a>
+
+  <!-- Project 6 -->
+  <a href="#" class="tile tile--wide">
+    <div class="tile-image">
+      <div class="tile-image-ratio" style="background:linear-gradient(140deg,#dad7d2,#c7c3bd)"></div>
+      <span class="tile-image-label">Project Render</span>
+    </div>
+    <div class="tile-overlay">
+      <div class="tile-name">Project —</div>
+      <div class="tile-location">Mexico City</div>
+    </div>
+    <div class="tile-arrow"><svg viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="1.2"><path d="M3 13L13 3M13 3H5M13 3v8"/></svg></div>
+  </a>
+
+  <!-- Project 7 -->
+  <a href="#" class="tile tile--short">
+    <div class="tile-image">
+      <div class="tile-image-ratio" style="background:linear-gradient(160deg,#dfd9d6,#cbc5c0)"></div>
+      <span class="tile-image-label">Project Render</span>
+    </div>
+    <div class="tile-overlay">
+      <div class="tile-name">Project —</div>
+      <div class="tile-location">Coconut Grove, Miami</div>
+    </div>
+    <div class="tile-arrow"><svg viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="1.2"><path d="M3 13L13 3M13 3H5M13 3v8"/></svg></div>
+  </a>
+
+  <!-- Project 8 -->
+  <a href="#" class="tile tile--xtall">
+    <div class="tile-image">
+      <div class="tile-image-ratio" style="background:linear-gradient(155deg,#d6d3ce,#c0bcb6)"></div>
+      <span class="tile-image-label">Project Render</span>
+    </div>
+    <div class="tile-overlay">
+      <div class="tile-name">Project —</div>
+      <div class="tile-location">Miami, FL</div>
+    </div>
+    <div class="tile-arrow"><svg viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="1.2"><path d="M3 13L13 3M13 3H5M13 3v8"/></svg></div>
+  </a>
+
+  <!-- Project 9 -->
+  <a href="#" class="tile tile--square">
+    <div class="tile-image">
+      <div class="tile-image-ratio" style="background:linear-gradient(145deg,#e1deda,#ccc8c3)"></div>
+      <span class="tile-image-label">Project Render</span>
+    </div>
+    <div class="tile-overlay">
+      <div class="tile-name">Project —</div>
+      <div class="tile-location">Mexico City</div>
+    </div>
+    <div class="tile-arrow"><svg viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="1.2"><path d="M3 13L13 3M13 3H5M13 3v8"/></svg></div>
+  </a>
+
+  <!-- Project 10 -->
+  <a href="#" class="tile tile--wide">
+    <div class="tile-image">
+      <div class="tile-image-ratio" style="background:linear-gradient(150deg,#dbd8d3,#c9c5bf)"></div>
+      <span class="tile-image-label">Project Render</span>
+    </div>
+    <div class="tile-overlay">
+      <div class="tile-name">Project —</div>
+      <div class="tile-location">Coconut Grove, Miami</div>
+    </div>
+    <div class="tile-arrow"><svg viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="1.2"><path d="M3 13L13 3M13 3H5M13 3v8"/></svg></div>
+  </a>
+
+  <!-- Project 11 -->
+  <a href="#" class="tile tile--tall">
+    <div class="tile-image">
+      <div class="tile-image-ratio" style="background:linear-gradient(165deg,#d9d6d1,#c4c0ba)"></div>
+      <span class="tile-image-label">Project Render</span>
+    </div>
+    <div class="tile-overlay">
+      <div class="tile-name">Project —</div>
+      <div class="tile-location">Miami, FL</div>
+    </div>
+    <div class="tile-arrow"><svg viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="1.2"><path d="M3 13L13 3M13 3H5M13 3v8"/></svg></div>
+  </a>
+
+</div>
+
+<!-- ═══════════ CTA ═══════════ -->
+<section class="cta" id="cta">
+  <div class="cta-content">
+    <div class="cta-label" id="ctaL">Start a Project</div>
+    <h2 class="cta-heading" id="ctaH">Have a Vision?<br>Let's Build It.</h2>
+    <p class="cta-sub" id="ctaS">Every project starts with a conversation. Tell us about your site, your ambitions, your timeline — and we'll tell you what's possible.</p>
+    <a href="contact.html" class="cta-btn" id="ctaB">Get in Touch</a>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">L U X O M</div>
+    <div class="footer-logo-sub">D E V E L O P M E N T S</div>
+    <div class="footer-links">
+      <a href="about.html" class="footer-link">About</a>
+      <a href="projects.html" class="footer-link">Projects</a>
+      <a href="services.html" class="footer-link">Services</a>
+      <a href="career.html" class="footer-link">Career</a>
+      <a href="contact.html" class="footer-link">Contact</a>
+      <a href="#" class="footer-link">Instagram</a>
+    </div>
+    <div class="footer-line"></div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 Luxom Developments. All rights reserved.</div>
+      <div class="footer-mantra">Design with Purpose. Live with Meaning.</div>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════ JAVASCRIPT ═══════════ -->
+<script>
+const navbar = document.getElementById('navbar');
+let lastScrollY = 0;
+
+// ── Navbar hide/show ──
+function updateNavbar() {
+  const sy = window.scrollY, d = sy - lastScrollY;
+  if (Math.abs(d) > 5) {
+    if (sy < 200) navbar.classList.remove('nav-hidden');
+    else if (d > 0) navbar.classList.add('nav-hidden');
+    else navbar.classList.remove('nav-hidden');
+  }
+  lastScrollY = sy;
+}
+
+// ── Staggered tile reveals ──
+const tiles = document.querySelectorAll('.tile');
+function revealTiles() {
+  tiles.forEach((tile, i) => {
+    if (tile.classList.contains('visible')) return;
+    if (tile.getBoundingClientRect().top < window.innerHeight * 0.88) {
+      setTimeout(() => tile.classList.add('visible'), 80 * (i % 4));
+    }
+  });
+}
+
+// ── Filter tabs (visual) ──
+document.querySelectorAll('.filter-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+  });
+});
+
+function reveal(el, off) {
+  if (!el || el.classList.contains('visible')) return;
+  if (el.getBoundingClientRect().top < window.innerHeight * (off || 0.82)) el.classList.add('visible');
+}
+
+// ── Scroll ──
+function onScroll() {
+  updateNavbar();
+  revealTiles();
+  reveal(document.getElementById('ctaL'));
+  reveal(document.getElementById('ctaH'));
+  reveal(document.getElementById('ctaS'));
+  reveal(document.getElementById('ctaB'), 0.88);
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+</script>
+</body>
+</html>

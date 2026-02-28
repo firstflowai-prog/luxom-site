@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Services — Luxom Developments</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --black:#0A0A0A;--white:#FAFAFA;--pure-white:#FFFFFF;
+    --gray-60:#999;--gray-40:#666;
+    --ease-out:cubic-bezier(0.16,1,0.3,1);
+    --ease-smooth:cubic-bezier(0.4,0,0,1);
+    --font-heading:'Playfair Display',serif;
+    --font-ui:'Montserrat',sans-serif;
+    --font-body:'DM Sans',sans-serif;
+  }
+  html{scroll-behavior:smooth}
+  body{font-family:var(--font-body);background:var(--black);color:#fff;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+  /* ═══ NAVBAR ═══ */
+  .nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 48px;height:72px;display:flex;align-items:center;justify-content:center;background:transparent;transition:background .6s var(--ease-smooth),border-color .6s var(--ease-smooth),transform .5s var(--ease-smooth);border-bottom:1px solid rgba(255,255,255,0.04)}
+  .nav.scrolled{background:rgba(0,0,0,0.88);backdrop-filter:blur(24px)}
+  .nav.hidden{transform:translateY(-100%)}
+  .nav-inner{width:100%;max-width:1440px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center}
+  .nav-l,.nav-r{display:flex;align-items:center;gap:40px}
+  .nav-r{justify-content:flex-end}
+  .nav-c{display:flex;flex-direction:column;align-items:center;gap:1px;padding:0 40px}
+  .nav-logo{font-family:var(--font-ui);font-weight:300;font-size:17px;letter-spacing:.35em;color:#fff;text-decoration:none}
+  .nav-logo-sub{font-family:var(--font-ui);font-weight:300;font-size:6.5px;letter-spacing:.5em;color:rgba(255,255,255,0.35)}
+  .nk{font-family:var(--font-body);font-weight:500;font-size:8.5px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,0.45);text-decoration:none;transition:color .3s ease;position:relative}
+  .nk::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:currentColor;transition:width .5s var(--ease-out)}
+  .nk:hover{color:#fff}.nk:hover::after{width:100%}
+  .nk.active{color:rgba(255,255,255,0.85)}.nk.active::after{width:100%}
+  .nav-cta{font-family:var(--font-body);font-weight:500;font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;color:#fff;text-decoration:none;display:flex;align-items:center;gap:8px;transition:opacity .3s ease}
+  .nav-cta:hover{opacity:.6}.nav-cta .plus{font-size:14px;font-weight:200}
+
+  /* ═══════════════════════════════════════
+     HEADER
+     ═══════════════════════════════════════ */
+  .header{padding:160px 80px 80px;position:relative}
+  .header-inner{max-width:1440px;margin:0 auto}
+  .header-title{font-family:var(--font-heading);font-size:clamp(64px,10vw,120px);font-weight:400;color:#fff;line-height:0.95;letter-spacing:-0.01em}
+  .header-title .line{display:block;overflow:hidden}
+  .header-title .line span{display:block;transform:translateY(105%);animation:lineReveal 1s var(--ease-out) forwards}
+  .header-title .line:nth-child(2) span{animation-delay:.25s}
+
+  /* ═══════════════════════════════════════
+     SERVICES GRID
+     ═══════════════════════════════════════ */
+  .services{padding:40px 80px 160px}
+  .services-inner{max-width:1440px;margin:0 auto}
+  .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+
+  .card{position:relative;overflow:hidden;cursor:pointer;text-decoration:none;color:#fff;display:block}
+  .card-img{width:100%;aspect-ratio:3/4;position:relative;overflow:hidden}
+  .card-img-bg{position:absolute;inset:-12px;will-change:transform;transition:transform 1.4s var(--ease-smooth)}
+  .card:hover .card-img-bg{transform:scale(1.05)}
+  /* Grain */
+  .card-img-grain{position:absolute;inset:0;z-index:2;opacity:.025;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-repeat:repeat;background-size:128px}
+  /* Vignette */
+  .card-img-vig{position:absolute;inset:0;z-index:1;background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,0.2) 100%);pointer-events:none}
+  /* Bottom gradient for text */
+  .card-img-grad{position:absolute;inset:0;z-index:3;background:linear-gradient(to top,rgba(0,0,0,0.55) 0%,rgba(0,0,0,0.08) 35%,transparent 60%);pointer-events:none;transition:opacity .6s ease}
+  .card:hover .card-img-grad{opacity:.85}
+  /* Placeholder label */
+  .card-img .ph{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-ui);font-size:7px;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,0.05);white-space:nowrap;z-index:1}
+
+  /* Card content — sits at bottom of image */
+  .card-content{position:absolute;bottom:0;left:0;right:0;z-index:4;padding:36px 32px}
+  .card-index{font-family:var(--font-ui);font-weight:200;font-size:11px;letter-spacing:.3em;color:rgba(255,255,255,0.2);margin-bottom:12px;display:block}
+  .card-name{font-family:var(--font-heading);font-size:clamp(28px,3vw,40px);font-weight:400;color:#fff;line-height:1.15;margin-bottom:6px}
+  .card-person{font-family:var(--font-heading);font-style:italic;font-size:14px;color:rgba(255,255,255,0.3);margin-bottom:20px}
+  .card-cta{font-family:var(--font-body);font-weight:500;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,0.45);display:inline-flex;align-items:center;gap:8px;transition:color .4s ease,gap .4s var(--ease-out)}
+  .card:hover .card-cta{color:#fff;gap:14px}
+  .card-cta svg{width:14px;height:14px;transition:transform .4s var(--ease-out)}
+  .card:hover .card-cta svg{transform:translateX(2px)}
+
+  /* Stagger entrance */
+  .card{opacity:0;transform:translateY(40px);transition:opacity 1s var(--ease-out),transform 1s var(--ease-out)}
+  .card.vis{opacity:1;transform:translateY(0)}
+  .card:nth-child(1).vis{transition-delay:0s}
+  .card:nth-child(2).vis{transition-delay:.12s}
+  .card:nth-child(3).vis{transition-delay:.24s}
+
+  /* Placeholder image backgrounds */
+  .card:nth-child(1) .card-img-bg{background:linear-gradient(165deg,#2a2520,#1a1714);animation:kenBurns1 22s ease-in-out infinite alternate}
+  .card:nth-child(2) .card-img-bg{background:linear-gradient(160deg,#252220,#161412);animation:kenBurns2 26s ease-in-out infinite alternate}
+  .card:nth-child(3) .card-img-bg{background:linear-gradient(155deg,#282420,#181614);animation:kenBurns3 20s ease-in-out infinite alternate}
+
+  /* ═══════════════════════════════════════
+     CTA
+     ═══════════════════════════════════════ */
+  .cta-split{height:50vh;min-height:380px;background:var(--black);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;text-align:center}
+  .cta-split-content{position:relative;z-index:2}
+  .cta-words{display:flex;flex-direction:column;align-items:center;gap:0;margin-bottom:28px}
+  .cta-word{font-family:var(--font-heading);font-weight:400;line-height:1;overflow:hidden}
+  .cta-w1{font-size:clamp(48px,8vw,100px);color:#fff;opacity:0;transform:translateY(30px)}
+  .cta-w2{font-size:clamp(48px,8vw,100px);color:#fff;opacity:0;transform:translateY(30px)}
+  .cta-w1.vis,.cta-w2.vis{opacity:1;transform:translateY(0);transition:opacity 1.2s var(--ease-out),transform 1.2s var(--ease-out)}
+  .cta-w2.vis{transition-delay:.15s}
+  .cta-sub-text{font-family:var(--font-heading);font-style:italic;font-size:16px;color:rgba(255,255,255,0.2);margin-bottom:36px;opacity:0;transform:translateY(16px)}
+  .cta-sub-text.vis{opacity:1;transform:translateY(0);transition:all 1s var(--ease-out) .3s}
+  .cta-btn{display:inline-block;font-family:var(--font-body);font-weight:500;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#fff;text-decoration:none;padding:20px 56px;border:1px solid rgba(255,255,255,0.15);transition:all .5s ease;opacity:0;transform:translateY(20px)}
+  .cta-btn.vis{opacity:1;transform:translateY(0);transition:opacity 1.2s var(--ease-out) .2s,transform 1.2s var(--ease-out) .2s,border-color .5s ease,letter-spacing .5s ease}
+  .cta-btn:hover{border-color:rgba(255,255,255,0.5);letter-spacing:.28em}
+  .cta-split-grain{position:absolute;inset:0;z-index:1;opacity:.03;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-repeat:repeat;background-size:128px}
+  .cta-marquee{position:absolute;top:50%;left:0;transform:translateY(-50%);white-space:nowrap;overflow:visible;pointer-events:none;z-index:0}
+  .cta-marquee-track{display:flex;animation:marquee 25s linear infinite}
+  .cta-marquee-item{font-family:var(--font-ui);font-weight:200;font-size:180px;color:rgba(255,255,255,0.015);padding:0 80px;flex-shrink:0;line-height:1}
+
+  /* ═══ FOOTER ═══ */
+  .footer{background:#000;padding:80px 80px 40px}
+  .footer-inner{max-width:1200px;margin:0 auto;text-align:center}
+  .footer-logo{font-family:var(--font-ui);font-weight:300;font-size:20px;letter-spacing:.4em;color:#fff;margin-bottom:3px}
+  .footer-logo-sub{font-family:var(--font-ui);font-weight:300;font-size:7px;letter-spacing:.5em;color:rgba(255,255,255,0.3);margin-bottom:48px}
+  .footer-links{display:flex;justify-content:center;gap:48px;margin-bottom:48px}
+  .fk{font-family:var(--font-body);font-weight:500;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,0.3);text-decoration:none;transition:color .3s ease}
+  .fk:hover{color:rgba(255,255,255,0.8)}
+  .footer-line{width:100%;height:1px;background:rgba(255,255,255,0.05);margin-bottom:28px}
+  .footer-btm{display:flex;justify-content:space-between;align-items:center}
+  .footer-copy{font-family:var(--font-body);font-weight:300;font-size:10px;color:rgba(255,255,255,0.15)}
+  .footer-mantra{font-family:var(--font-heading);font-style:italic;font-size:12px;color:rgba(255,255,255,0.15)}
+
+  /* ═══ KEYFRAMES ═══ */
+  @keyframes lineReveal{from{transform:translateY(105%)}to{transform:translateY(0)}}
+  @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+  @keyframes kenBurns1{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.12) translate(-2%,-1.5%)}}
+  @keyframes kenBurns2{0%{transform:scale(1.08) translate(1%,1%)}100%{transform:scale(1) translate(-1.5%,-2%)}}
+  @keyframes kenBurns3{0%{transform:scale(1) translate(1.5%,-1%)}100%{transform:scale(1.1) translate(-1%,2%)}}
+
+  /* ═══ RESPONSIVE ═══ */
+  @media(max-width:960px){
+    .nav{padding:0 24px}.nav-l,.nav-r{display:none}
+    .header{padding:120px 24px 48px}
+    .header-title .line span{font-size:clamp(48px,14vw,80px)}
+    .services{padding:24px 24px 100px}
+    .services-grid{grid-template-columns:1fr;gap:12px}
+    .card-img{aspect-ratio:4/3}
+    .cta-split{height:45vh}
+    .cta-w1,.cta-w2{font-size:48px}
+    .footer{padding:48px 24px 28px}.footer-links{flex-wrap:wrap;gap:20px}.footer-btm{flex-direction:column;gap:8px}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <div class="nav-l"><a href="projects.html" class="nk">Projects</a><a href="services.html" class="nk active">Services</a><a href="contact.html" class="nk">Contact</a></div>
+    <div class="nav-c"><a href="index.html" class="nav-logo">L U X O M</a><span class="nav-logo-sub">D E V E L O P M E N T S</span></div>
+    <div class="nav-r"><a href="about.html" class="nk">About</a><a href="career.html" class="nk">Career</a><a href="contact.html" class="nav-cta">Let\'s Talk <span class="plus">+</span></a></div>
+  </div>
+</nav>
+
+
+<!-- HEADER -->
+<section class="header">
+  <div class="header-inner">
+    <h1 class="header-title">
+      <span class="line"><span>Services</span></span>
+    </h1>
+  </div>
+</section>
+
+
+<!-- SERVICES GRID -->
+<section class="services">
+  <div class="services-inner">
+    <div class="services-grid">
+
+      <!-- DEVELOPMENT — Samuel -->
+      <a href="#" class="card" id="c1">
+        <div class="card-img">
+          <div class="card-img-bg"></div>
+          <div class="card-img-vig"></div>
+          <div class="card-img-grain"></div>
+          <div class="card-img-grad"></div>
+          <span class="ph">Development — Construction Site or Aerial</span>
+        </div>
+        <div class="card-content">
+          <span class="card-index">01</span>
+          <div class="card-name">Development</div>
+          <div class="card-person">Samuel Bissu</div>
+          <div class="card-cta">Learn more <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </div>
+      </a>
+
+      <!-- ARCHITECTURE — Simón -->
+      <a href="#" class="card" id="c2">
+        <div class="card-img">
+          <div class="card-img-bg"></div>
+          <div class="card-img-vig"></div>
+          <div class="card-img-grain"></div>
+          <div class="card-img-grad"></div>
+          <span class="ph">Architecture — Exterior Detail or Model</span>
+        </div>
+        <div class="card-content">
+          <span class="card-index">02</span>
+          <div class="card-name">Architecture</div>
+          <div class="card-person">Simón Bissu</div>
+          <div class="card-cta">Learn more <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </div>
+      </a>
+
+      <!-- INTERIOR DESIGN — Margaret -->
+      <a href="#" class="card" id="c3">
+        <div class="card-img">
+          <div class="card-img-bg"></div>
+          <div class="card-img-vig"></div>
+          <div class="card-img-grain"></div>
+          <div class="card-img-grad"></div>
+          <span class="ph">Interior Design — Living Space or Material Detail</span>
+        </div>
+        <div class="card-content">
+          <span class="card-index">03</span>
+          <div class="card-name">Interior Design</div>
+          <div class="card-person">Margaret Bissu</div>
+          <div class="card-cta">Learn more <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- CTA -->
+<section class="cta-split" id="ctaSplit">
+  <div class="cta-split-grain"></div>
+  <div class="cta-marquee"><div class="cta-marquee-track">
+    <span class="cta-marquee-item">LET'S BUILD TOGETHER</span>
+    <span class="cta-marquee-item">DESIGN WITH PURPOSE</span>
+    <span class="cta-marquee-item">LET'S BUILD TOGETHER</span>
+    <span class="cta-marquee-item">DESIGN WITH PURPOSE</span>
+  </div></div>
+  <div class="cta-split-content">
+    <div class="cta-words">
+      <span class="cta-word cta-w1" id="ctaW1">Start a</span>
+      <span class="cta-word cta-w2" id="ctaW2">Conversation.</span>
+    </div>
+    <div class="cta-sub-text" id="ctaSub">Tell us about your land, your vision, or just a feeling.</div>
+    <a href="contact.html" class="cta-btn" id="ctaBtn">Get In Touch</a>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">L U X O M</div>
+    <div class="footer-logo-sub">D E V E L O P M E N T S</div>
+    <div class="footer-links"><a href="about.html" class="fk">About</a><a href="projects.html" class="fk">Projects</a><a href="services.html" class="fk">Services</a><a href="career.html" class="fk">Career</a><a href="contact.html" class="fk">Contact</a><a href="#" class="fk">Instagram</a></div>
+    <div class="footer-line"></div>
+    <div class="footer-btm"><div class="footer-copy">© 2025 Luxom Developments. All rights reserved.</div><div class="footer-mantra">Design with Purpose. Live with Meaning.</div></div>
+  </div>
+</footer>
+
+
+<script>
+(function(){
+  var VH=function(){return window.innerHeight};
+  /* Navbar */
+  var nav=document.getElementById('nav'),lastY=0;
+  function doNav(){
+    var y=window.scrollY,d=y-lastY;
+    if(Math.abs(d)>5){if(y<200)nav.classList.remove('hidden');else if(d>0)nav.classList.add('hidden');else nav.classList.remove('hidden')}
+    lastY=y;
+    nav.classList.toggle('scrolled',y>100);
+  }
+  /* Card reveals */
+  function doReveals(){
+    var th=VH()*0.85;
+    document.querySelectorAll('.card:not(.vis)').forEach(function(e){
+      if(e.getBoundingClientRect().top<th)e.classList.add('vis');
+    });
+    ['ctaW1','ctaW2','ctaSub','ctaBtn'].forEach(function(id){
+      var el=document.getElementById(id);
+      if(el&&!el.classList.contains('vis')&&el.getBoundingClientRect().top<th)el.classList.add('vis');
+    });
+  }
+  function onScroll(){requestAnimationFrame(function(){doNav();doReveals()})}
+  window.addEventListener('scroll',onScroll,{passive:true});
+  requestAnimationFrame(function(){doReveals()});
+})();
+</script>
+</body>
+</html>
