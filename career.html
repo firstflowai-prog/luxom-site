@@ -42,6 +42,7 @@
   .nav-cta{font-family:var(--font-body);font-weight:500;font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;color:#fff;text-decoration:none;display:flex;align-items:center;gap:8px;transition:opacity .3s ease}
   .nav-cta:hover{opacity:.6}.nav-cta .plus{font-size:14px;font-weight:200}
   .nav.on-light .nav-cta{color:#000}
+  .nav.on-light .hamburger span{background:#000}
 
   /* ═══════════════════════════════════════
      1. HERO + KINETIC — Single video runs through both
@@ -185,9 +186,34 @@
   @keyframes kenBurns3{0%{transform:scale(1) translate(1.5%,-1%)}100%{transform:scale(1.1) translate(-1%,2%)}}
   @keyframes kenBurns4{0%{transform:scale(1.05) translate(-1%,0.5%)}100%{transform:scale(1) translate(1.5%,-1.5%)}}
 
+
+  /* ── Mobile Hamburger Menu ── */
+  .hamburger { display: none; cursor: pointer; z-index: 1001; width: 28px; height: 20px; position: relative; background: none; border: none; padding: 0; }
+  .hamburger span { display: block; width: 100%; height: 1.5px; background: #fff; position: absolute; left: 0; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); }
+  .hamburger span:nth-child(1) { top: 0; }
+  .hamburger span:nth-child(2) { top: 50%; transform: translateY(-50%); }
+  .hamburger span:nth-child(3) { bottom: 0; }
+  .hamburger.active span:nth-child(1) { top: 50%; transform: translateY(-50%) rotate(45deg); }
+  .hamburger.active span:nth-child(2) { opacity: 0; }
+  .hamburger.active span:nth-child(3) { bottom: 50%; transform: translateY(50%) rotate(-45deg); }
+  
+  .mobile-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0A0A0A; z-index: 999; flex-direction: column; justify-content: center; align-items: center; gap: 32px; opacity: 0; transition: opacity 0.4s cubic-bezier(0.4,0,0.2,1); }
+  .mobile-overlay.active { display: flex; opacity: 1; }
+  .mobile-overlay a { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 400; color: #fff; text-decoration: none; letter-spacing: 0.02em; opacity: 0.7; transition: opacity 0.3s ease; }
+  .mobile-overlay a:hover { opacity: 1; }
+  .mobile-overlay a.mob-active { opacity: 1; }
+
+  @media (max-width: 960px) {
+    .hamburger { display: block; }
+  }
+
   /* ═══ RESPONSIVE ═══ */
   @media(max-width:960px){
     .nav{padding:0 24px}.nav-l,.nav-r{display:none}
+    .nav-inner{display:flex;justify-content:center;align-items:center;position:relative}
+    .hamburger{display:block;position:absolute;right:0;top:50%;transform:translateY(-50%)}
+
+
     .hero-marquee-track .hmi{font-size:48px;padding:0 20px}
     .hero-bottom{padding:0 24px 36px;flex-direction:column;align-items:flex-start;gap:10px}.hero-tagline{text-align:left}
     .hero-kin-scroll{height:auto!important}.hero-kin-sticky{position:relative;height:auto}
@@ -213,9 +239,21 @@
   <div class="nav-inner">
     <div class="nav-l"><a href="projects.html" class="nk">Projects</a><a href="services.html" class="nk">Services</a><a href="contact.html" class="nk">Contact</a></div>
     <div class="nav-c"><a href="index.html" class="nav-logo">L U X O M</a><span class="nav-logo-sub">D E V E L O P M E N T S</span></div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
     <div class="nav-r"><a href="about.html" class="nk">About</a><a href="career.html" class="nk active">Career</a><a href="contact.html" class="nav-cta">Let\'s Talk <span class="plus">+</span></a></div>
   </div>
 </nav>
+
+<!-- Mobile Menu Overlay -->
+<div class="mobile-overlay" id="mobileOverlay">
+  <a href="index.html">Home</a>
+  <a href="projects.html">Projects</a>
+  <a href="services.html">Services</a>
+  <a href="about.html">About</a>
+  <a href="career.html" class="mob-active">Career</a>
+  <a href="contact.html">Contact</a>
+</div>
+
 
 <!-- 1. HERO + KINETIC — Single video, marquee fades to word reveal -->
 <section class="hero-kin" id="heroKin">
@@ -439,5 +477,20 @@
   requestAnimationFrame(function(){doHeroKin();doGallery();doReveals();doNav();doProg()});
 })();
 </script>
+
+<script>
+(function(){
+  var btn = document.getElementById('hamburger');
+  var overlay = document.getElementById('mobileOverlay');
+  if(btn && overlay) {
+    btn.addEventListener('click', function(){
+      btn.classList.toggle('active');
+      overlay.classList.toggle('active');
+      document.body.style.overflow = overlay.classList.contains('active') ? 'hidden' : '';
+    });
+  }
+})();
+</script>
+
 </body>
 </html>
